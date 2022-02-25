@@ -13,8 +13,11 @@ t = 0
 # joint index
 jIdx = 1
 # containters for logging and plots
-log_time = [t]
-log_pos = [q0]
+idx = 0
+maxIdx = int(maxTime / dt)
+log_time = [x for x in range(idx,maxIdx)]
+log_pos = [x for x in range(idx,maxIdx)]
+log_pos[0] = q0
 
 if (IS_GUI):
     physicsClient = p.connect(p.GUI)
@@ -23,6 +26,15 @@ else:
 
 p.setGravity(0, 0, -g)
 bodyId = p.loadURDF("./pendulum.urdf")
+
+p.changeDynamics(bodyUniqueId=bodyId,
+                linkIndex=jIdx,
+                restitution=0,
+                spinningFriction=0,
+                rollingFriction=0,
+                lateralFriction=0,
+                frictionAnchor=0,
+                anisotropicFriction=0)
 
 p.setJointMotorControl2(bodyIndex = bodyId,
                         jointIndex = jIdx,
@@ -35,15 +47,15 @@ p.setJointMotorControl2(bodyIndex = bodyId,
                         jointIndex = jIdx,
                         controlMode = p.VELOCITY_CONTROL,
                         targetVelocity = 0,
-                        force = 0)
-while t <= maxTime:
+                        force = -0.155)
+
+while idx < maxIdx:
     p.stepSimulation()
     pos = p.getJointState(bodyId, jIdx)[0]
     t += dt
-    # TODO switch to preallocated indexing
-    # log_pos[idx] = pos
-    log_pos.append(pos)
-    log_time.append(t)
+    log_pos[idx] = pos
+    log_time[idx] = t
+    idx += 1
     if (IS_GUI):
         time.sleep(dt)
 p.disconnect()
