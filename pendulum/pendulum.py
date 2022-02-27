@@ -29,12 +29,7 @@ bodyId = p.loadURDF("./pendulum.urdf")
 
 p.changeDynamics(bodyUniqueId=bodyId,
                 linkIndex=jIdx,
-                restitution=0,
-                spinningFriction=0,
-                rollingFriction=0,
-                lateralFriction=0,
-                frictionAnchor=0,
-                anisotropicFriction=0)
+                linearDamping=0)
 
 p.setJointMotorControl2(bodyIndex = bodyId,
                         jointIndex = jIdx,
@@ -47,7 +42,7 @@ p.setJointMotorControl2(bodyIndex = bodyId,
                         jointIndex = jIdx,
                         controlMode = p.VELOCITY_CONTROL,
                         targetVelocity = 0,
-                        force = -0.155)
+                        force = 0)
 
 while idx < maxIdx:
     p.stepSimulation()
